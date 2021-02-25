@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=user-home
+Name=Home
+Path=$HOME
+Type=Link
+URL[$e]=$HOME
