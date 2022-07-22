@@ -1,58 +1,75 @@
-# .bashrc
+#################################################################################
+#	Filename:		~/.bashrc													#
+#	Purpose:		Config file for bash (bourne again shell)					#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
+#	License:		This file is licensed under the LGPLv3.						#
+#################################################################################
 
 # Source global definitions
-if [ -f /etc/bashrc ]; then
+if [ -f /etc/bashrc ]
+then
 	. /etc/bashrc
 fi
 
 # User specific environment
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
 then
-    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+	PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
+
 export PATH
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
 # User specific aliases and functions
-## Colors
-blue='\[\e[0;34m\]'
-red='\[\e[0;31m\]'
-red_background='\[\e[41m\]'
-white='\[\e[0;37m\]'
-
-reset='\[\e[0m\]'														# reset the color to the default value
-
-## Aliases
-alias cd..='cd ..'
-alias hystory='history'
-alias ls='ls -A --color=auto'
-
 ## Code that must be execute when the shell is opened
-export NVM_DIR="$HOME/.nvm"
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" 					# This loads nvm
-	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"	# This loads nvm bash_completion
 
-if [[ $USER = 'root' ]]													# if that manage the colour of the username into the prompt
+# retrieve the path of the repository
+repo_path=$(find "${HOME}" -type d -regex '.*/dotfiles' 2> /dev/null)
+
+# check if the repo exists
+if [ $? -eq 0 ]
 then
-	PS1="${red}"
-else
-	PS1="${blue}"
+    # Uncomment the line that load the script that manage yout package manager
+
+    # include the Shell Script that manage apt
+    source "${repo_path}/apt.sh"
+    # include the Shell Script that manage dnf
+    #source "${repo_path}/dnf.sh"
+    # include the Shell Script that manage pacman
+    #source "${repo_path}/pacman.sh"
+    # include the Shell Script that manage AUR
+    #source "${repo_path}/aur.sh"
+    # include the Shell Script that define the aliases
+    source "${repo_path}/alias.sh"
+    # include the Shell Script that manage git
+    source "${repo_path}/git.sh"
+    # include the Shell Script that manage the background processes
+    source "${repo_path}/kill.sh"
+    # include the Shell Script that manage the colors on the terminal
+    source "${repo_path}/colors.sh"
 fi
 
-PS1="${PS1}\u\[${reset}\]@\h \W"										# creating the prompt
+unset repo_path
 
-if [[ $USER = 'root' ]]													# if that manage the last character of the prompt
+# if that manage the creation of the prompt
+if [ "${USER}" = 'root' ]
 then
-	PS1="${PS1} # "
+	PS1="${bold_red:?}\u${reset:?}@\h \W # "
 else
-	PS1="${PS1} % "
+	PS1="${bold_high_intensty_blue:?}\u${reset:?}@\h \W % "
 fi
 
-source ~/Documents/GitHub/dot_files/apt.sh								# include the Shell Script that manage apt
-source ~/Documents/GitHub/dot_files/git.sh								# include the Shell Script that manage git
-source ~/Documents/GitHub/dot_files/kill.sh								# include the Shell Script that manage the background processes
+# secondary prompt, printed when the shell needs more information to complete a command
+PS2='\`%_> '
+# selection prompt, used within a select loop
+PS3='?# '
+# the execution trace prompt (setopt xtrace)
+PS4='+%N:%i:%_> '
 
-rm -rf ~/.bash_history													# erasing the history of the shell
-clear																	# clearing the shell
+# erasing the history of the shell
+rm --recursive --force ~/.bash_history
+
+# clearing the shell
+clear

@@ -1,28 +1,39 @@
-#!/bin/sh
+#!/bin/bash
 
-function kill-kill {
-	killall -s KILL -v -I $1
+#################################################################################
+#	Filename:		.../dotfiles/kill.sh										#
+#	Purpose:		File that manage kill and killall							#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
+#	License:		This file is licensed under the LGPLv3.						#
+#################################################################################
+
+# kill all the instance of a program
+kill-kill() {
+	# the parameter $1 is the name of the program that you want kill
+	killall --signal KILL --verbose --ignore-case "$1"
 }
 
-function kills {
-	path=$(find $HOME -regex ".*processes_to_kill\.txt")		# retrieve the path of the file that contains the PIDs of the processes that must be killed
+# kill all the PID's into the file processes_to_kill.txt
+kills() {
+	local kill_path
+	local buffer
 
-	if [ -e $path ] && [ -f $path ]								# if that checks if the file exists
-	then
+	if kill_path="$(find "${HOME}" -type f -regex '.*/processes_to_kill\.txt' 2> /dev/null)" && [[ -f "${kill_path}" ]]; then
 		buffer=''
 
-		for i in $(cat $path)									# create a list with the PIDs into the file
-		do
+		while read -r i; do
 			buffer="${buffer}${i} "
-		done
+		done < "${kill_path}"
 
-		rm -rf $path											# delete permanently the PIDs
+		rm --recursive --force "${kill_path}"
 
-		let i=${#buffer} - 1
-		buffer=${buffer: $i}
+		# remove the last whitespace
+		buffer="${buffer:0:${#buffer}-1}"
 
-		kill -s KILL $buffer > /dev/null						# kill the processes
+		kill --signal KILL "${buffer}" > /dev/null
 	else
-		echo -e "There aren\'t process in background."
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}There aren't process in background.${reset:-}" > /dev/stderr
+		return 1
 	fi
 }

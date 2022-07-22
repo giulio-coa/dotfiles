@@ -3,9 +3,9 @@ For contribute at this project, open an Issue or a Pull request.
 
 ### Rules to Code
 
-* For indentation, use Tabs instead Spaces (1 Tab = 4 Spaces)
-* For the strings delimiter, use `'`, except when is needed to expanse some variables
-* Comment all the function with extreme precision
+* For indentation, use Tabs instead Spaces
+* For the strings delimiter, use `'` except for the new-line character (`"\n"`)
+* Every special character (`'`, `"`, `\`, etc.) must be preceded by `\`, also if not necessary
 
 ### Util links
 

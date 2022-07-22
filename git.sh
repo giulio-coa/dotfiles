@@ -1,250 +1,304 @@
-#!/bin/sh
+#!/bin/bash
 
-function update_repository {
-	if [ $# -eq 0 ]																	# check if the program must update all the branches
-	then
-		for i in $(git branch --list | sed -e 's/^\(.*\)\*\s*\(.*\)$/\1\2/')		# cycle through the list of local branches
-		do
-			i=`echo "${i}" | sed -e 's/^\s*//' -e 's/\s*$//'`						# trim the name of the branch
+#################################################################################
+#	Filename:		.../dotfiles/git.sh											#
+#	Purpose:		File that manage git										#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
+#	License:		This file is licensed under the LGPLv3.						#
+#	Pre-requisites:																#
+#					* git														#
+#################################################################################
 
-			git checkout $i &> /dev/null
+# Update a single repository
+__pull_repository() {
+	# the parameter $1 is the name of the branch
 
-			git pull
-		done
+	local base_branch branch_name
 
-		unset i
-	elif [ $# -eq 1 ]																# check if the program must update only one branch
-	then
-		git checkout $1 &> /dev/null
-
-		if [ $? -eq 0 ]																# check if the branch exists
-		then
-			git pull
-		fi
-	else
-		echo "${red_background}${white}ERROR: Too much parameters for the function update_repository()." > /dev/stderr
-		return 3
-	fi
-
-	git checkout master &> /dev/null
-}
-
-function update {
-	branch=''																		# set the default value for the branch
-
-	saved_IFS=$IFS																	# save the IFS
-	IFS=$'\n'																		# set the IFS to the new-line character
-
-	for parameter in $*																# parse the options with parameters
-	do
-		if echo $parameter | grep -q '\-\-branch'									# check if the parameter is the option --branch
-		then
-			if echo $parameter | grep -q '='										# check if the parameter contain, also, the value of the option
-			then
-				i=$(expr $parameter : '.*=')
-				branch=${parameter:$i}
-			else
-				branch_is_next_parameter='true'
-			fi
-
-			continue
-		elif [ ! -z $branch_is_next_parameter ]										# check if the parameter is the value of the option --branch
-		then
-			branch=$parameter
-
-			unset branch_is_next_parameter
-			continue
-		fi
-	done
-
-
-	IFS=$saved_IFS																	# restore the IFS
-	unset saved_IFS
-
-	options=$(getopt -n $0 -o '' -l 'all-repo,branch::'  -- $@)						# check the presence of the options
-
-	if [ $? -ne 0 ]																	# check if getopt has failed
-	then
-		echo "${red_background}${white}ERROR: getopt command has failed." > /dev/stderr
+	if ! command -v git &> /dev/null; then
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}git isn't installed${reset:-}" > /dev/stderr
 		return 1
 	fi
 
-	eval set -- $options															# set the options
+	# On Alpine Linux, some commands are installed in a reduced version
+	if command -v apk &> /dev/null; then
+		if ! command -v sudo &> /dev/null; then
+			# shellcheck disable=SC3037
+			echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+			return 1
+		fi
 
-	while true																		# parse the options without parameters
-	do
-		case $1 in
-			--all-repo)																# check if the program must update all the repositories
-				all_repo='true'
+		sudo apk --quiet --no-cache add grep sed
+	fi
+
+	base_branch="$(git branch --list | \
+		grep --no-messages --extended-regexp --regexp='^\*' | \
+		sed --regexp-extended --expression='s/^\* //')"
+
+	# check if the program must update all the branches
+	if [[ "$#" -eq 0 ]]; then
+		for i in $(git branch --list | \
+				sed --regexp-extended --expression='s/^(.*)\*\s*(.*)$/\1\2/'); do
+			branch_name="$(sed --regexp-extended --expression='s/^\s*//' --expression='s/\s*$//' <<< "${i}")"
+
+			git checkout "${branch_name}" &> /dev/null
+
+			git pull --verbose --recurse-submodules=yes --all --prune
+		done
+	# check if the program must update only one branch
+	elif [[ "$#" -eq 1 ]]; then
+		git checkout "$1" &> /dev/null && \
+			git pull --verbose --recurse-submodules=yes --all --prune
+	else
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}Too much parameters for the function __pull_repository().${reset:-}" > /dev/stderr
+		return 5
+	fi
+
+	git checkout "${base_branch}" &> /dev/null
+}
+
+# Update the repositories
+git-update() {
+	local __REPO branch
+	local options
+
+	if ! command -v git &> /dev/null; then
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}git isn't installed${reset:-}" > /dev/stderr
+		return 1
+	fi
+
+	# set the flag to update only one repository
+	__REPO=0
+	# set the flag to update only one branch
+	branch=''
+
+	if ! options="$(getopt --name "$0" --options 'ab:h' --longoptions 'all,branch:,help'  -- "$@")"; then
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}getopt command has failed.${reset:-}" > /dev/stderr
+		return 2
+	fi
+
+	eval set -- "${options}"
+
+	while true; do
+		case "$1" in
+			-a | --all)
+				__REPO=1
+
+				shift
+				continue
+				;;
+			-b | --branch)
+				branch="$2"
+
+				shift 2
+				continue
+				;;
+			-h | --help)
+				printf 'git-update [options]\n\n'
+				printf 'Options:\n'
+				printf '\t-a, --all: Do the pull of all your local repo\n'
+				printf '\t-b <branch_name>, --branch <branch_name>: Do the pull only of the specified branch\n'
+				printf '\t-h, --help: Print this menu\n'
+				return 0
 				;;
 			--)
 				shift
 				break
 				;;
+			*)
+				# shellcheck disable=SC3037
+				echo -e "${bold_red:-}Internal error.${reset:-}" > /dev/stderr
+				return 3
+				;;
 		esac
-		shift
 	done
 
-	if [ ! -z $all_repo ]															# check if the program must update all the repositories
-	then
-		for i in $(ls -d $HOME/downloads/*/)										# cycle through the list of local repositories
-		do
-			cd $i
+	# check if the program must update only one repository
+	if [[ "${__REPO}" -eq 0 ]]; then
+		git fetch --all --prune --verbose
 
-			if [ -n $branch ]														# check if the program must update all the branches of all the repositories
-			then
-				update_repository
-			else
-				update_repository $branch
-			fi
-
-			cd ..
-		done
-
-		cd $HOME
-	else
-		if [ -n $branch ]															# check if the program must update all the branches
-		then
-			update_repository
+		# check if the program must update all the branches
+		if [[ -z "${branch}" ]]; then
+			__pull_repository
 		else
-			update_repository $branch
-		fi
-	fi
-}
-
-function commit_repository {
-	if [ $# -eq 0 ]																	# check if there are some problems
-	then
-		echo "${red_background}${white}ERROR: Too less parameters for the function commit_repository()." > /dev/stderr
-		return 3
-	elif [ $# -eq 1 ]																# check if the program must commit all the branches
-	then
-		for i in $(git branch --list | sed -e 's/^\(.*\)\*\s*\(.*\)$/\1\2/')		# cycle through the list of local branches
-		do
-			i=`echo "${i}" | sed -e 's/^\s*//' -e 's/\s*$//'`						# trim the name of the branch
-
-			git checkout $i &> /dev/null
-
-			git add .
-			git commit -S -m "${1}"
-			git push
-		done
-
-		unset i
-	elif [ $# -eq 2 ]																# check if the program must commit only one branch
-	then
-		git checkout $1 &> /dev/null
-
-		if [ $? -eq 0 ]																# check if the branch exists
-		then
-			git add .
-			git commit -S -m "${2}"
-			git push
+			__pull_repository "${branch}"
 		fi
 	else
-		echo "${red_background}${white}ERROR: Too much parameters for the function commit_repository()." > /dev/stderr
-		return 4
-	fi
+		for i in path/that/contains/all/your/repository/*/; do
+			if [[ ! -d "${i}" ]]; then
+				continue
+			fi
 
-	git checkout master &> /dev/null
+			(
+				cd "${i}" || return 4
+
+				git fetch --all --prune --verbose
+
+				# check if the program must update all the branches of all the repositories
+				if [[ -z "${branch}" ]]; then
+					__pull_repository
+				else
+					__pull_repository "${branch}"
+				fi
+			)
+		done
+	fi
 }
 
-function commit {
-	branch=''																		# set the default value for the branch
-	message='Automatic commit of the repository'									# set the default value for the message
+# Commit a single repository
+__commit_repository() {
+	# the parameter $1 is the message of the commit
 
-	saved_IFS=$IFS																	# save the IFS
-	IFS=$'\n'																		# set the IFS to the new-line character
+	local base_branch branch_name
 
-	for options in $*																# parse the options with parameters
-	do
-		if echo $options | grep -q '\-\-branch'										# check if the parameter is the option --branch
-		then
-			if echo $options | grep -q '='											# check if the parameter contain, also, the value of the option
-			then
-				i=$(expr $options : '.*=')
-				branch=${options:$i}
-			else
-				branch_is_next_parameter='true'
-			fi
-
-			continue
-		elif echo $options | grep -q '\-\-message'									# check if the parameter is the option --message
-		then
-			if echo $options | grep -q '='											# check if the parameter contain, also, the value of the option
-			then
-				i=$(expr $options : '.*=')
-				message=${options:$i}
-			else
-				message_is_next_parameter='true'
-			fi
-
-			continue
-		elif [ ! -z $branch_is_next_parameter ]										# check if the parameter is the value of the option --branch
-		then
-			branch=$options
-
-			unset branch_is_next_parameter
-			continue
-		elif [ ! -z $message_is_next_parameter ]									# check if the parameter is the value of the option --message
-		then
-			message=$options
-
-			unset message_is_next_parameter
-			continue
-		fi
-	done
-
-	IFS=$saved_IFS																	# restore the IFS
-	unset saved_IFS
-
-	options=$(getopt -n $0 -o '' -l 'all-repo,branch::,message::'  -- $@)			# check the presence of the options
-
-	if [ $? -ne 0 ]																	# check if getopt has failed
-	then
-		echo "${red_background}${white}ERROR: getopt command has failed." > /dev/stderr
+	if ! command -v git &> /dev/null; then
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}git isn't installed${reset:-}" > /dev/stderr
 		return 1
 	fi
 
-	eval set -- $options															# set the options
+	# On Alpine Linux, some commands are installed in a reduced version
+	if command -v apk &> /dev/null; then
+		if ! command -v sudo &> /dev/null; then
+			# shellcheck disable=SC3037
+			echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+			return 1
+		fi
 
-	while true																		# parse the options without parameters
-	do
-		case $1 in
-			--all-repo)																# check if the program must commit all the repositories
-				all_repo='true'
+		sudo apk --quiet --no-cache add grep sed
+	fi
+
+	base_branch="$(git branch --list | \
+		grep --no-messages --extended-regexp --regexp='^\*' | \
+		sed --regexp-extended --expression='s/^\* //')"
+
+	if [[ "$#" -eq 0 ]]; then
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}Too less parameters for the function __commit_repository().${reset:-}" > /dev/stderr
+		return 5
+	# check if the program must commit only one branch
+	elif [[ "$#" -eq 1 ]]; then
+		git add --verbose --interactive -- .
+		git commit --all --signoff --verbose --message="${1}"
+		git push --verbose
+	# check if the program must commit all the branches
+	elif [[ "$#" -eq 2 ]]; then
+		for i in $(git branch --list | \
+				sed --regexp-extended --expression='s/^(.*)\*\s*(.*)$/\1\2/'); do
+			branch_name="$(sed --regexp-extended --expression='s/^\s*//' --expression='s/\s*$//' <<< "${i}")"
+
+			git checkout "${branch_name}" &> /dev/null
+
+			git add --verbose --interactive -- .
+			git commit --all --signoff --verbose --message="${1}"
+			git push --verbose
+		done
+	else
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}Too much parameters for the function __commit_repository().${reset:-}" > /dev/stderr
+		return 6
+	fi
+
+	git checkout "${base_branch}" &> /dev/null
+}
+
+# Commit the repositories
+git-commit() {
+	local __REPO __BRANCH message
+	local options
+
+	# set the flag to update only one repository
+	__REPO=0
+	# set the flag to update only one branch
+	__BRANCH=0
+	message='Automatic commit of the repository'
+
+	if ! options="$(getopt --name "$0" --options 'abhm::' --longoptions 'all-repo,all-branch,help,message::'  -- "$@")"; then
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}getopt command has failed.${reset:-}" > /dev/stderr
+		return 2
+	fi
+
+	eval set -- "${options}"
+
+	while true; do
+		case "$1" in
+			-a | --all-repo)
+				__REPO=1
+
+				shift
+				continue
+				;;
+			-b | --all-branch)
+				__BRANCH=1
+
+				shift
+				continue
+				;;
+			-h | --help)
+				printf 'git-commit [options]\n\n'
+				printf 'Options:\n'
+				printf '\t-a, --all-repo: Do the commit of all your local repo\n'
+				printf '\t-b, --all-branch: Do the commit of all your local branch\n'
+				printf '\t-h, --help: Print this menu\n'
+				printf '\t-m <text>, --message <text>: Specify a message for the commit\n'
+				return 0
+				;;
+			-m | --message)
+				# -m and --message have an optional argument.
+				# As we are in quoted mode, an empty parameter will be generated if
+				# its optional argument is not found.
+				case "$2" in
+					'')
+						;;
+					*)
+						message="$2"
+						;;
+				esac
+
+				shift 2
+				continue
 				;;
 			--)
 				shift
 				break
 				;;
+			*)
+				# shellcheck disable=SC3037
+				echo -e "${bold_red:-}Internal error.${reset:-}" > /dev/stderr
+				return 3
+				;;
 		esac
-		shift
 	done
 
-	if [ ! -z $all_repo ]															# check if the program must commit all the repositories
-	then
-		for i in $(ls -d $HOME/downloads/*/)										# cycle through the list of local repositories
-		do
-			cd $i
-
-			if [ -n $branch ]														# check if the program must commit all the branches of all the repositories
-			then
-				commit_repository "$message"
-			else
-				commit_repository $branch "$message"
+	# check if the program must update only one repository
+	if [[ "${__REPO}" -eq 0 ]]; then
+		# check if the program must update only one branch
+		if [[ "${__BRANCH}" -eq 0 ]]; then
+			__commit_repository "${message}"
+		else
+			__commit_repository "${message}" '-'
+		fi
+	else
+		for i in path/that/contains/all/your/repository/*/; do
+			if [[ ! -d "${i}" ]]; then
+				continue
 			fi
 
-			cd ..
-		done
+			(
+				cd "${i}" || return 4
 
-		cd $HOME
-	else
-		if [ -n $branch ]															# check if the program must commit all the branches
-		then
-			commit_repository "$message"
-		else
-			commit_repository $branch "$message"
-		fi
+				# check if the program must update only one branch
+				if [[ "${__BRANCH}" -eq 0 ]]; then
+					__commit_repository "${message}"
+				else
+					__commit_repository "${message}" '-'
+				fi
+			)
+		done
 	fi
 }

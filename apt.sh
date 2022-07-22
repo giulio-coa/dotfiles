@@ -1,17 +1,55 @@
-#!/bin/sh
+#!/bin/bash
 
-function apt-clear {
-	sudo apt autoclean; sudo apt autoremove; sudo apt clean all
+#################################################################################
+#	Filename:		.../dotfiles/apt.sh											#
+#	Purpose:		File that manage the package manager apt					#
+#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
+#	License:		This file is licensed under the LGPLv3.						#
+#	Pre-requisites:																#
+#					* sudo														#
+#################################################################################
+
+# Clear un-needed dipendecies
+apt-clear() {
+	if ! command -v sudo &> /dev/null; then
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+		return 1
+	fi
+
+	sudo apt autoremove
+	sudo apt clean all
 }
 
-function apt-remove {
+# Remove packages, their dependencies not required and configurations
+apt-remove() {
 	# the parameter $* is the list of package that you want remove
-	sudo apt purge $* && apt-clear
+
+	if ! command -v sudo &> /dev/null; then
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+		return 1
+	fi
+
+	sudo apt purge "$*" && apt-clear
 }
 
-function apt-upgrade {
-	# if the OS have KDE as DE (desktop enviroment), I suggest you to add, previous "sudo apt dist-upgrade" the string "sudo pkcon refresh; sudo pkcon update; "
-	# if the configuration files are for the Termux's app, you must erease the keyword "sudo "
+# Upgrade all packages
+apt-upgrade() {
+	if ! command -v sudo &> /dev/null; then
+		# shellcheck disable=SC3037
+		echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+		return 1
+	fi
 
-	sudo apt dist-upgrade; sudo apt full-upgrade; sudo apt update; sudo apt upgrade; apt-clear
+	# KDE as DE (desktop enviroment)
+	if command -v pkcon &> /dev/null; then
+		sudo pkcon refresh
+		sudo pkcon update
+	fi
+
+	sudo apt update
+	sudo apt dist-upgrade
+	sudo apt full-upgrade
+	apt-clear
 }

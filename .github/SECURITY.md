@@ -2,13 +2,13 @@
 
 ## Supported Versions
 
-| Version  | Description                                   | Supported          |
-| :------: | :-------------------------------------------: | :----------------: |
-| master   | The actual release of the configuration files | :white_check_mark: |
+| Version  | Description                       | Supported          |
+| :------: | :-------------------------------: | :----------------: |
+| master   | The actual release of the project | :white_check_mark: |
 ## Vulnerability Disclosure
 
 If you think you have found a potential security vulnerability in
-requests, please email [us](mailto:34110430+giulioc008@users.noreply.github.com) directly.
+requests, please email [us](mailto:34110430+giulio-coa@users.noreply.github.com) directly.
 **Do not file a public issue.**
 
 If English is not your first language, please try to describe the

@@ -1,14 +1,19 @@
 [Unit]
+# Check if the System Service exists
 AssertPathExists=/lib/systemd/system/check_IP.service
 AssertFileNotEmpty=/lib/systemd/system/check_IP.service
+
+# Set the dependencies
 After=network.target
+Requires=network.target
+
 Description=Timer that manage the script that checks the public IP of the router
 
 [Timer]
 OnBootSec=1us
 OnUnitActiveSec=10min
-Unit=check_IP.service
+
+Unit=check_ip.service
 
 [Install]
 Alias=check_ip.timer
-WantedBy=multi-user.target timers.target

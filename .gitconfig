@@ -5,8 +5,9 @@
 [color]
 	ui = true
 [user]
-	name = Giulio Coa
+	name = Mario Rossi
 	email = mail_to@provider.com
-	signingkey = 0AAA000AA0A00A00
 [credential]
 	helper = store
+[pull]
+	rebase = false

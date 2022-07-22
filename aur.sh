@@ -1,73 +1,63 @@
 #!/bin/bash
 
 #################################################################################################
-#	Filename:		.../dotfiles/pacman.sh														#
-#	Purpose:		File that manage the package manager pacman									#
+#	Filename:		.../dotfiles/aur.sh															#
+#	Purpose:		File that manage the package manager AUR									#
 #	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>, Christian Mondo	#
 #	License:		This file is licensed under the LGPLv3.										#
 #	Pre-requisites:																				#
 #					* sudo																		#
+#					* yay (https://github.com/Jguer/yay)										#
 #################################################################################################
 
-# Remove all the cached packages that are not currently installed and the unused sync database
-pacman-clear() {
-	if ! command -v sudo &> /dev/null; then
+# Clear unneeded dipendecies
+aur-clear() {
+	if ! command -v yay &> /dev/null; then
 		# shellcheck disable=SC3037
-		echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+		echo -e "${bold_red:-}yay isn't installed${reset:-}" > /dev/stderr
 		return 1
 	fi
 
-	sudo pacman --sync --clean
+	yay --yay --clean
 }
 
-# Remove all cached file
-pacman-clear-all() {
-	if ! command -v sudo &> /dev/null; then
-		# shellcheck disable=SC3037
-		echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
-		return 1
-	fi
-
-	sudo pacman --sync --clean --clean
-}
-
-# Install list of packages without reinstall the already installed ones
-pacman-install() {
+# Install from AUR or repository
+aur-install() {
 	# the parameter $* is the list of package that you want install
 
-	if ! command -v sudo &> /dev/null; then
+	if ! command -v yay &> /dev/null; then
 		# shellcheck disable=SC3037
-		echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+		echo -e "${bold_red:-}yay isn't installed${reset:-}" > /dev/stderr
 		return 1
 	fi
 
-	sudo pacman --sync --needed "$*"
+	yay --sync "$*"
 }
 
-# List explicitly installed packages
-pacman-list-installed() {
+# List explicitly installed AUR packages
+aur-list-installed() {
 	if ! command -v sudo &> /dev/null; then
 		# shellcheck disable=SC3037
 		echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
 		return 1
 	fi
 
-	sudo pacman --query --explicit --native
+	sudo pacman --query --explicit --foreign
 }
 
-# List installed packages
-pacman-list-installed-all() {
+# List installed AUR packages
+aur-list-installed-all() {
 	if ! command -v sudo &> /dev/null; then
 		# shellcheck disable=SC3037
 		echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
 		return 1
 	fi
 
-	sudo pacman --query --native
+	sudo pacman --query --foreign
 }
 
 # Remove packages, their dependencies not required and configurations
-pacman-remove() {
+aur-remove() {
 	# the parameter $* is the list of package that you want remove
 
 	if ! command -v sudo &> /dev/null; then
@@ -76,23 +66,29 @@ pacman-remove() {
 		return 1
 	fi
 
-	sudo pacman --remove --nosave --recursive "$*" && pacman-clear
+	sudo pacman --remove --nosave --recursive "$*" && aur-clear
 }
 
-# Upgrade all packages
-pacman-upgrade() {
-	if ! command -v sudo &> /dev/null; then
+# Upgrade all AUR packages
+aur-upgrade() {
+	if ! command -v yay &> /dev/null; then
 		# shellcheck disable=SC3037
-		echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+		echo -e "${bold_red:-}yay isn't installed${reset:-}" > /dev/stderr
 		return 1
 	fi
 
 	# KDE as DE (desktop enviroment)
 	if command -v pkcon &> /dev/null; then
+		if ! command -v sudo &> /dev/null; then
+			# shellcheck disable=SC3037
+			echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+			return 1
+		fi
+
 		sudo pkcon refresh
 		sudo pkcon update
 	fi
 
-	sudo pacman --sync --refresh --sysupgrade
-	pacman-clear
+	yay --sync --refresh --sysupgrade --aur
+	aur-clear
 }

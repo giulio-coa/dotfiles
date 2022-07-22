@@ -1,44 +1,39 @@
 #-----------------------#
 # Configuration Section #
 #-----------------------#
-
-flags = -Wall -g
+flags = -Wall -Wextra -g
 srcDir = source
 headDir = header
-objDir = obj
 lib = -lm -lpthread
+project_name = project_name
 
-.PHONY: clean project
+.PHONY: clean $(project_name)
 
 #---------------------#
 # Rules for compiling #
 #---------------------#
-
-project: $(objDir)/main.o $(objDir)/lib.o clean
-	gcc $(flags) -o $@ $(objDir)/main.o $(objDir)/lib.o $(lib)
+$(project_name): main.o lib.o clean
+	gcc $(flags) -o $@ main.o lib.o $(lib)
 	chmod 775 $@
 
-$(objDir)/main.o: $(srcDir)/main.c
-	gcc $(flags) -o $@ -c $^ $(lib)
+main.o: $(srcDir)/main.c
+	gcc $(flags) -c $^ $(lib)
 
-$(objDir)/lib.o: $(srcDir)/lib.c $(headDir)/lib.h
-	gcc $(flags) -o $@ -c $^ $(lib)
+lib.o: $(srcDir)/lib.c $(headDir)/lib.h
+	gcc $(flags) -c $^ $(lib)
 
 #--------------------#
 # Rules for cleaning #
 #--------------------#
-
 clean:
 	rm -rf $(srcDir)/*bak*
-	rm -rf $(objDir)/*bak*
 	rm -rf *bak*
 	rm -rf $(srcDir)/*~
-	rm -rf $(objDir)/*~
 	rm -rf *~
 	rm -rf $(srcDir)/core
-	rm -rf $(objDir)/core
 	rm -rf core
 
 distclean: clean
-	rm -rf project
-	rm -rf $(objDir)/*.o
+	rm -rf $(project_name)
+	rm -rf *.o
+	rm -rf $(headDir)/*.gch
