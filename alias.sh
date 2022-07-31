@@ -1,17 +1,38 @@
 #!/bin/sh
 
-#################################################################################
-#	Filename:		.../dotfiles/alias.sh										#
-#	Purpose:		File that defines the aliases for some commands				#
+#########################################################################
+#	Filename:		.../dotfiles/alias.sh			                  							#
+#	Purpose:		File that defines the aliases for some commands		      	#
 #	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
-#	License:		This file is licensed under the LGPLv3.						#
-#################################################################################
+#	License:		This file is licensed under the LGPLv3.					          #
+#########################################################################
+
+set -e
 
 alias cd..='cd ..'
-alias diff='diff --color=auto'
-alias grep='grep --extended-regexp --no-messages --color=auto'
 alias hystory='history'
-alias ip='ip --color=auto'
 alias ls='ls --almost-all --human-readable --color=auto'
-alias sed='sed --regexp-extended'
-alias sudo='sudo '
+
+if command -v diff > /dev/null 2> /dev/null; then
+  alias diff='diff --color=auto'
+fi
+
+if command -v grep > /dev/null 2> /dev/null; then
+  alias grep='grep --extended-regexp --no-messages --color=auto'
+fi
+
+if command -v ip > /dev/null 2> /dev/null; then
+  alias ip='ip --color=auto'
+fi
+
+if command -v sed > /dev/null 2> /dev/null; then
+  alias sed='sed --regexp-extended'
+fi
+
+if command -v shfmt > /dev/null 2> /dev/null; then
+  alias shfmt='shfmt --indent 2 --case-indent --space-redirects'
+fi
+
+if command -v sudo > /dev/null 2> /dev/null; then
+  alias sudo='sudo '
+fi
