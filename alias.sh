@@ -29,8 +29,12 @@ if command -v sed > /dev/null 2> /dev/null; then
   alias sed='sed --regexp-extended'
 fi
 
+if command -v shellcheck > /dev/null 2> /dev/null; then
+  alias shellcheck='shellcheck --check-sourced --color=auto --external-sources'
+fi
+
 if command -v shfmt > /dev/null 2> /dev/null; then
-  alias shfmt='shfmt --indent 2 --case-indent --space-redirects'
+  alias shfmt='shfmt --indent 2 --case-indent --binary-next-line --space-redirects'
 fi
 
 if command -v sudo > /dev/null 2> /dev/null; then
