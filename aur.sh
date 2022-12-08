@@ -32,7 +32,7 @@ aur-clear() {
 # Install from AUR or repository
 aur-install() {
   # the parameter $@ is the list of package that you want install
-  yay --sync "$@"
+  yay --sync --answerclean A --answerdiff N "$@"
 }
 
 # List explicitly installed AUR packages
@@ -59,5 +59,5 @@ aur-upgrade() {
     sudo pkcon refresh && sudo pkcon update
   fi
 
-  yay --sync --refresh --sysupgrade --aur && aur-clear
+  yay --sync --refresh --sysupgrade --aur --answerclean A --answerdiff N && aur-clear
 }
