@@ -1,12 +1,11 @@
 # Security Policy
 
 ## Supported Versions
-
 | Version  | Description                       | Supported          |
 | :------: | :-------------------------------: | :----------------: |
 | master   | The actual release of the project | :white_check_mark: |
-## Vulnerability Disclosure
 
+## Vulnerability Disclosure
 If you think you have found a potential security vulnerability in
 requests, please email [us](mailto:34110430+giulio-coa@users.noreply.github.com) directly.
 **Do not file a public issue.**
@@ -25,14 +24,12 @@ We will respect your privacy and will only publicize your involvement if
 you grant us permission.
 
 ### Process
-
 This following information discusses the process the requests project
 follows in response to vulnerability disclosures. If you are disclosing
 a vulnerability, this section of the documentation lets you know how we
 will respond to your disclosure.
 
 #### Timeline
-
 When you report an issue, one of the project members will respond to you
 as soon as possible. This initial response will at the very
 least confirm receipt of the report.

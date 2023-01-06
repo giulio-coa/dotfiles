@@ -7,8 +7,6 @@
 #	License:		This file is licensed under the LGPLv3.					          #
 #########################################################################
 
-set -e
-
 alias cd..='cd ..'
 alias hystory='history'
 alias ls='ls --almost-all --human-readable --color=auto'

@@ -10,12 +10,10 @@
 #				        	* sudo								                        						#
 #############################################################################
 
-set -e
-
-if ! command -v sudo &> /dev/null; then
+if ! command -v sudo > /dev/null 2> /dev/null; then
   echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
   exit 1
-elif ! command -v apt &> /dev/null; then
+elif ! command -v apt > /dev/null 2> /dev/null; then
   echo -e "${bold_red:-}apt isn't installed${reset:-}" > /dev/stderr
   exit 1
 fi
@@ -34,9 +32,8 @@ apt-remove() {
 
 # Upgrade all packages
 apt-upgrade() {
-  # DE (desktop enviroment) section
-  ## KDE
-  if command -v pkcon &> /dev/null; then
+  # PackageKit support
+  if command -v pkcon > /dev/null 2> /dev/null; then
     sudo pkcon refresh && sudo pkcon update
   fi
 

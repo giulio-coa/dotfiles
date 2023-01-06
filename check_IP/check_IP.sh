@@ -9,8 +9,6 @@
 #					        * sudo		                         												#
 #############################################################################
 
-set -e
-
 __help() {
   printf './start.sh [options]\n\n'
   printf 'Options:\n'
@@ -97,8 +95,8 @@ __checkIP() {
     esac
   done
 
-  curl --location --fail https://ip6.me/api/ 2> /dev/null |
-    cut --delimiter=',' --fields=2 > "${IP_file_path}"
+  curl --location --fail https://ip6.me/api/ 2> /dev/null \
+    | cut --delimiter=',' --fields=2 > "${IP_file_path}"
   date >> "${IP_file_path}"
 
   if [[ "${__POST}" -eq 1 ]]; then

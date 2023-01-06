@@ -7,8 +7,6 @@
 #	License:		This file is licensed under the LGPLv3.					        	#
 #########################################################################
 
-set -e
-
 export black='\e[0;30m'
 export red='\e[0;31m'
 export green='\e[0;32m'

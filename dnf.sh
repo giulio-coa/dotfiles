@@ -10,12 +10,10 @@
 #				        	* sudo														                        #
 #############################################################################
 
-set -e
-
-if ! command -v sudo &> /dev/null; then
+if ! command -v sudo > /dev/null 2> /dev/null; then
   echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
   exit 1
-elif ! command -v dnf &> /dev/null; then
+elif ! command -v dnf > /dev/null 2> /dev/null; then
   echo -e "${bold_red:-}dnf isn't installed${reset:-}" > /dev/stderr
   exit 1
 fi
@@ -40,10 +38,6 @@ dnf-upgrade() {
   # set the flag to don't update the system
   release=''
 
-  if ! command -v dnf-plugin-system-upgrade &> /dev/null; then
-    sudo dnf --assumeyes --quiet install dnf-plugin-system-upgrade
-  fi
-
   if ! options=$(getopt --name "${0}" --options 'hr:' --longoptions 'help,release:' -- "$@"); then
     echo -e "${bold_red:-}getopt command has failed.${reset:-}" > /dev/stderr
     return 2
@@ -54,10 +48,11 @@ dnf-upgrade() {
   while true; do
     case "${1}" in
       -h | --help)
-        printf './start.sh [options]\n\n'
-        printf 'Options:\n'
-        printf '\t-h, --help: Print this menu\n'
-        printf '\t-r <release_number>, --release <release_number>: Update the system to the specified release\n'
+        echo './start.sh [options]'
+        echo
+        echo 'Options:'
+        echo -e '\t-h, --help: Print this menu'
+        echo -e '\t-r <release_number>, --release <release_number>: Update the system to the specified release'
         return 0
         ;;
       -r | --release)
@@ -77,9 +72,8 @@ dnf-upgrade() {
     esac
   done
 
-  # DE (desktop enviroment) section
-  ## KDE
-  if command -v pkcon &> /dev/null; then
+  # PackageKit support
+  if command -v pkcon > /dev/null 2> /dev/null; then
     sudo pkcon refresh && sudo pkcon update
   fi
 
@@ -89,7 +83,11 @@ dnf-upgrade() {
   } && dnf-clear
 
   if [[ -n "${release}" ]]; then
-    sudo dnf system-upgrade download --best --allowerasing --refresh --releasever="${release}" &&
-      sudo dnf system-upgrade reboot
+    if ! command -v dnf-plugin-system-upgrade > /dev/null 2> /dev/null; then
+      sudo dnf --assumeyes --quiet install dnf-plugin-system-upgrade
+    fi
+
+    sudo dnf system-upgrade download --best --allowerasing --refresh --releasever="${release}" \
+      && sudo dnf system-upgrade reboot
   fi
 }

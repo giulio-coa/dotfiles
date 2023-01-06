@@ -24,7 +24,15 @@ export PATH
 # User specific aliases and functions
 ## Code that must be execute when the shell is opened
 
-if repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles' 2> /dev/null)"; then
+# enable case-insensitive tab completion
+if [[ ! -e ~/.inputrc ]]; then
+  echo '$include /etc/inputrc' > ~/.inputrc
+fi
+
+echo 'set completion-ignore-case On' >> ~/.inputrc
+
+# include personal tools
+if repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles$' 2> /dev/null)"; then
   if command -v apt > /dev/null 2> /dev/null; then
     . "${repo_path}/apt.sh"
   elif command -v dnf > /dev/null 2> /dev/null; then
@@ -38,17 +46,16 @@ if repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles' 2> /dev/null)"; then
   fi
 
   . "${repo_path}/alias.sh"
-  . "${repo_path}/git.sh"
-  . "${repo_path}/kill.sh"
   . "${repo_path}/colors.sh"
+  . "${repo_path}/git.sh"
 fi
 
 unset repo_path
 
 if [[ "${USER}" == 'root' ]]; then
-  PS1="${bold_red:?}\u${reset:?}@\h \W # "
+  PS1="${bold_red:?}\u${reset:?}${bold_white:?}@\h \w #${reset:?} "
 else
-  PS1="${bold_high_intensty_blue:?}\u${reset:?}@\h \W % "
+  PS1="${bold_high_intensty_blue:?}\u${reset:?}${bold_white:?}@\h \w %${reset:?} "
 fi
 
 # secondary prompt, printed when the shell needs more information to complete a command

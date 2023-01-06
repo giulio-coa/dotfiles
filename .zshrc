@@ -3703,7 +3703,8 @@ zrclocal
 # User specific aliases and functions
 ## Code that must be execute when the shell is opened
 
-if repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles' 2> /dev/null)"; then
+# include personal tools
+if repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles$' 2> /dev/null)"; then
   if command -v apt > /dev/null 2> /dev/null; then
     . "${repo_path}/apt.sh"
   elif command -v dnf > /dev/null 2> /dev/null; then
@@ -3717,9 +3718,8 @@ if repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles' 2> /dev/null)"; then
   fi
 
   . "${repo_path}/alias.sh"
-  . "${repo_path}/git.sh"
-  . "${repo_path}/kill.sh"
   . "${repo_path}/colors.sh"
+  . "${repo_path}/git.sh"
 fi
 
 unset repo_path

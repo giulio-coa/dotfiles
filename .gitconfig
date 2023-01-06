@@ -7,7 +7,14 @@
 [user]
 	name = Mario Rossi
 	email = mail_to@provider.com
+	signingkey = IVMNZ7MTBVUWP1JT
 [credential]
 	helper = store
 [pull]
 	rebase = false
+[commit]
+	gpgSign = true
+[gui]
+	pruneduringfetch = true
+[push]
+	recurseSubmodules = check

@@ -11,15 +11,13 @@
 #					        * yay (https://github.com/Jguer/yay)	                    									#
 ###############################################################################################
 
-set -e
-
-if ! command -v sudo &> /dev/null; then
+if ! command -v sudo > /dev/null 2> /dev/null; then
   echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
   exit 1
-elif ! command -v pacman &> /dev/null; then
+elif ! command -v pacman > /dev/null 2> /dev/null; then
   echo -e "${bold_red:-}pacman isn't installed${reset:-}" > /dev/stderr
   exit 1
-elif ! command -v yay &> /dev/null; then
+elif ! command -v yay > /dev/null 2> /dev/null; then
   echo -e "${bold_red:-}yay isn't installed${reset:-}" > /dev/stderr
   exit 1
 fi
@@ -32,7 +30,7 @@ aur-clear() {
 # Install from AUR or repository
 aur-install() {
   # the parameter $@ is the list of package that you want install
-  yay --sync --answerclean A --answerdiff N "$@"
+  yay --sync --answerclean A --answerdiff N --removemake "$@"
 }
 
 # List explicitly installed AUR packages
@@ -53,11 +51,11 @@ aur-remove() {
 
 # Upgrade all AUR packages
 aur-upgrade() {
-  # DE (desktop enviroment) section
-  ## KDE
-  if command -v pkcon &> /dev/null; then
+  # PackageKit support
+  if command -v pkcon > /dev/null 2> /dev/null; then
     sudo pkcon refresh && sudo pkcon update
   fi
 
-  yay --sync --refresh --sysupgrade --aur --answerclean A --answerdiff N && aur-clear
+  yay --sync --refresh --sysupgrade --aur --answerclean A --answerdiff N --removemake \
+    && aur-clear
 }

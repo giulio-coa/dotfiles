@@ -9,21 +9,22 @@
 #			        		* sudo					    										                              				#
 #################################################################################################
 
-set -e
-
 __install() {
   local repo_path
+  local app entry
 
-  if ! command -v sudo &> /dev/null; then
+  if ! command -v sudo > /dev/null 2> /dev/null; then
     echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
     return 1
-  fi
-
-  if ! repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles' 2> /dev/null)"; then
+  elif ! repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles' 2> /dev/null)"; then
     echo -e "${bold_red:-}find crashed${reset:-}" > /dev/stderr
     return 2
   fi
 
+  mkdir --parents "${HOME}/.config"
+  sudo mkdir --parents '/root/.config'
+
+  # set Shell configuration files
   if [[ "${SHELL}" == '/bin/bash' ]]; then
     ln --force --symbolic "${repo_path}/.bashrc" "${HOME}/.bashrc"
     sudo ln --force --symbolic "${repo_path}/.bashrc" '/root/.bashrc'
@@ -32,6 +33,7 @@ __install() {
     sudo ln --force --symbolic "${repo_path}/.zshrc" '/root/.zshrc'
   fi
 
+  # set Vim configuration files
   if [[ -L "${HOME}/.vim" ]]; then
     rm --recursive --force "${HOME}/.vim"
   fi
@@ -46,32 +48,48 @@ __install() {
   ln --force --symbolic "${repo_path}/.vim" "${HOME}/.vim"
   sudo ln --force --symbolic "${repo_path}/.vim" '/root/.vim'
 
-  ln --force --symbolic "${repo_path}/.gitconfig" "${HOME}/.gitconfig"
-  sudo ln --force --symbolic "${repo_path}/.gitconfig" '/root/.gitconfig'
+  ## remove duplicates
+  if [[ -L "${HOME}/.vim/.vim" ]]; then
+    rm --recursive --force "${HOME}/.vim/.vim"
+  fi
 
-  for i in "${repo_path}/.config/"*; do
-    if [[ ! -d "${i}" ]]; then
-      continue
+  if [[ -L '/root/.vim/.vim' ]]; then
+    sudo rm --recursive --force '/root/.vim/.vim'
+  fi
+
+  # set Git configuration files
+  cp "${repo_path}/.gitconfig" "${HOME}/.gitconfig"
+  sudo cp "${repo_path}/.gitconfig" '/root/.gitconfig'
+
+  # set applications configuration files
+  for app in "${repo_path}/.config/"*; do
+    if [[ -L "${HOME}/.config/$(basename "${app}")" ]]; then
+      rm --recursive --force "${HOME}/.config/$(basename "${app}")"
     fi
 
-    if [[ -L "${HOME}/.config/${i}" ]]; then
-      rm --recursive --force "${HOME}/.config/${i}"
+    if [[ -L "/root/.config/$(basename "${app}")" ]]; then
+      sudo rm --recursive --force "/root/.config/$(basename "${app}")"
     fi
 
-    if [[ -L "/root/.config/${i}" ]]; then
-      sudo rm --recursive --force "/root/.config/${i}"
+    ln --force --symbolic "${app}" "${HOME}/.config/$(basename "${app}")"
+    sudo ln --force --symbolic "${app}" "/root/.config/$(basename "${app}")"
+
+    ## remove duplicates
+    if [[ -L "${HOME}/.config/$(basename "${app}")/$(basename "${app}")" ]]; then
+      rm --recursive --force "${HOME}/.config/$(basename "${app}")/$(basename "${app}")"
     fi
 
-    ln --force --symbolic "${repo_path}/.config/${i}" "${HOME}/.config/${i}"
-    sudo ln --force --symbolic "${repo_path}/.config/${i}" "/root/.config/${i}"
+    if [[ -L "/root/.config/$(basename "${app}")/$(basename "${app}")" ]]; then
+      sudo rm --recursive --force "/root/.config/$(basename "${app}")/$(basename "${app}")"
+    fi
   done
 
-  for i in "${repo_path}/desktop_entries/"*; do
-    if [[ ! -f "${i}" ]]; then
+  for entry in "${repo_path}/desktop_entries/"*; do
+    if [[ -f "${HOME}/Desktop/$(basename "${entry}")" ]]; then
       continue
     fi
 
-    cp "${repo_path}/desktop_entries/${i}" "${HOME}/Desktop/${i}"
+    cp "${entry}" "${HOME}/Desktop/$(basename "${entry}")"
   done
 
   sudo ln --force --symbolic "${repo_path}/usr/share/xournalpp/ui/toolbar.ini" '/usr/share/xournalpp/ui/toolbar.ini'

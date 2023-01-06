@@ -10,12 +10,10 @@
 #				        	* sudo				                              		    												#
 ###############################################################################################
 
-set -e
-
-if ! command -v sudo &> /dev/null; then
+if ! command -v sudo > /dev/null 2> /dev/null; then
   echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
   exit 1
-elif ! command -v pacman &> /dev/null; then
+elif ! command -v pacman > /dev/null 2> /dev/null; then
   echo -e "${bold_red:-}pacman isn't installed${reset:-}" > /dev/stderr
   exit 1
 fi
@@ -49,16 +47,17 @@ pacman-list-installed-all() {
 # Remove packages, their dependencies not required and configurations
 pacman-remove() {
   # the parameter $@ is the list of package that you want remove
-  sudo pacman --remove --nosave --recursive "$@" && pacman-clear
+  sudo pacman --remove --nosave --recursive "$@" \
+    && pacman-clear
 }
 
 # Upgrade all packages
 pacman-upgrade() {
-  # DE (desktop enviroment) section
-  ## KDE
-  if command -v pkcon &> /dev/null; then
+  # PackageKit support
+  if command -v pkcon > /dev/null 2> /dev/null; then
     sudo pkcon refresh && sudo pkcon update
   fi
 
-  sudo pacman --sync --refresh --sysupgrade && pacman-clear
+  sudo pacman --sync --refresh --sysupgrade \
+    && pacman-clear
 }
