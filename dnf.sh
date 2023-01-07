@@ -11,10 +11,10 @@
 #############################################################################
 
 if ! command -v sudo > /dev/null 2> /dev/null; then
-  echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+  echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
   exit 1
 elif ! command -v dnf > /dev/null 2> /dev/null; then
-  echo -e "${bold_red:-}dnf isn't installed${reset:-}" > /dev/stderr
+  echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red:-}dnf isn't installed${reset:-}" > /dev/stderr
   exit 1
 fi
 
@@ -39,7 +39,7 @@ dnf-upgrade() {
   release=''
 
   if ! options=$(getopt --name "${0}" --options 'hr:' --longoptions 'help,release:' -- "$@"); then
-    echo -e "${bold_red:-}getopt command has failed.${reset:-}" > /dev/stderr
+    echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red:-}getopt command has failed${reset:-}" > /dev/stderr
     return 2
   fi
 
@@ -66,7 +66,7 @@ dnf-upgrade() {
         break
         ;;
       *)
-        echo -e "${bold_red:-}Internal error.${reset:-}" > /dev/stderr
+        echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red:-}Internal error${reset:-}" > /dev/stderr
         return 3
         ;;
     esac

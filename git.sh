@@ -10,11 +10,11 @@
 #############################################################################
 
 if ! command -v git > /dev/null 2> /dev/null; then
-  echo -e "${bold_red:-}git isn't installed${reset:-}" > /dev/stderr
+  echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red:-}git isn't installed${reset:-}" > /dev/stderr
   exit 1
 fi
 
-# Commit the repositories
+# Clean a repository
 git-clean-all() {
   git reset --hard
   git clean --force -d

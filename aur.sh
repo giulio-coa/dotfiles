@@ -12,13 +12,13 @@
 ###############################################################################################
 
 if ! command -v sudo > /dev/null 2> /dev/null; then
-  echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+  echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
   exit 1
 elif ! command -v pacman > /dev/null 2> /dev/null; then
-  echo -e "${bold_red:-}pacman isn't installed${reset:-}" > /dev/stderr
+  echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red:-}pacman isn't installed${reset:-}" > /dev/stderr
   exit 1
 elif ! command -v yay > /dev/null 2> /dev/null; then
-  echo -e "${bold_red:-}yay isn't installed${reset:-}" > /dev/stderr
+  echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red:-}yay isn't installed${reset:-}" > /dev/stderr
   exit 1
 fi
 

@@ -18,9 +18,6 @@ _deps
 local-patch
 patched-src
 
-### DotSettings ###
-*.DotSettings
-
 ### Kate ###
 # Swap Files #
 .*.kate-swp

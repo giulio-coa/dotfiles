@@ -1,9 +1,10 @@
 # Security Policy
 
 ## Supported Versions
-| Version  | Description                       | Supported          |
-| :------: | :-------------------------------: | :----------------: |
-| master   | The actual release of the project | :white_check_mark: |
+| Version | Description                       | Supported          |
+| :-----: | :-------------------------------: | :----------------: |
+| master  | The stable release of the project | :white_check_mark: |
+| dev     | The actual release of the project | :x:                |
 
 ## Vulnerability Disclosure
 If you think you have found a potential security vulnerability in

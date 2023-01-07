@@ -7,8 +7,7 @@
 
 # Source global definitions
 if [[ -f /etc/bashrc ]]; then
-  # shellcheck disable=1091
-  . /etc/bashrc
+  source /etc/bashrc
 fi
 
 # User specific environment
@@ -34,20 +33,21 @@ echo 'set completion-ignore-case On' >> ~/.inputrc
 # include personal tools
 if repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles$' 2> /dev/null)"; then
   if command -v apt > /dev/null 2> /dev/null; then
-    . "${repo_path}/apt.sh"
+    source "${repo_path}/apt.sh"
   elif command -v dnf > /dev/null 2> /dev/null; then
-    . "${repo_path}/dnf.sh"
+    source "${repo_path}/dnf.sh"
   elif command -v pacman > /dev/null 2> /dev/null; then
-    . "${repo_path}/pacman.sh"
+    source "${repo_path}/pacman.sh"
 
     if command -v yay > /dev/null 2> /dev/null; then
-      . "${repo_path}/aur.sh"
+      source "${repo_path}/aur.sh"
     fi
   fi
 
-  . "${repo_path}/alias.sh"
-  . "${repo_path}/colors.sh"
-  . "${repo_path}/git.sh"
+  source "${repo_path}/alias.sh"
+  source "${repo_path}/colors.sh"
+  source "${repo_path}/docker.sh"
+  source "${repo_path}/git.sh"
 fi
 
 unset repo_path

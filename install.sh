@@ -9,16 +9,34 @@
 #			        		* sudo					    										                              				#
 #################################################################################################
 
+### Functions ###
+__err() {
+  local reset bold_red
+
+  # colors
+  reset='\e[0m'
+  bold_red='\e[1;31m'
+
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red}$@${reset}" > /dev/stderr
+}
+
+__get_file() {
+  case "${script_path}" in
+    /*)
+      echo "$(dirname "${script_path}")/$1"
+      ;;
+    *)
+      echo "${PWD}/$(dirname "${script_path}")/$1"
+      ;;
+  esac
+}
+
 __install() {
-  local repo_path
   local app entry
 
   if ! command -v sudo > /dev/null 2> /dev/null; then
-    echo -e "${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr
+    __err "sudo isn't installed"
     return 1
-  elif ! repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles' 2> /dev/null)"; then
-    echo -e "${bold_red:-}find crashed${reset:-}" > /dev/stderr
-    return 2
   fi
 
   mkdir --parents "${HOME}/.config"
@@ -26,11 +44,11 @@ __install() {
 
   # set Shell configuration files
   if [[ "${SHELL}" == '/bin/bash' ]]; then
-    ln --force --symbolic "${repo_path}/.bashrc" "${HOME}/.bashrc"
-    sudo ln --force --symbolic "${repo_path}/.bashrc" '/root/.bashrc'
+    ln --force --symbolic "$(__get_file .bashrc)" "${HOME}/.bashrc"
+    sudo ln --force --symbolic "$(__get_file .bashrc)" '/root/.bashrc'
   elif [[ "${SHELL}" == '/bin/zsh' ]]; then
-    ln --force --symbolic "${repo_path}/.zshrc" "${HOME}/.zshrc"
-    sudo ln --force --symbolic "${repo_path}/.zshrc" '/root/.zshrc'
+    ln --force --symbolic "$(__get_file .zshrc)" "${HOME}/.zshrc"
+    sudo ln --force --symbolic "$(__get_file .zshrc)" '/root/.zshrc'
   fi
 
   # set Vim configuration files
@@ -42,11 +60,11 @@ __install() {
     sudo rm --recursive --force '/root/.vim'
   fi
 
-  ln --force --symbolic "${repo_path}/.vimrc" "${HOME}/.vimrc"
-  sudo ln --force --symbolic "${repo_path}/.vimrc" '/root/.vimrc'
+  ln --force --symbolic "$(__get_file .vimrc)" "${HOME}/.vimrc"
+  sudo ln --force --symbolic "$(__get_file .vimrc)" '/root/.vimrc'
 
-  ln --force --symbolic "${repo_path}/.vim" "${HOME}/.vim"
-  sudo ln --force --symbolic "${repo_path}/.vim" '/root/.vim'
+  ln --force --symbolic "$(__get_file .vim)" "${HOME}/.vim"
+  sudo ln --force --symbolic "$(__get_file .vim)" '/root/.vim'
 
   ## remove duplicates
   if [[ -L "${HOME}/.vim/.vim" ]]; then
@@ -58,11 +76,11 @@ __install() {
   fi
 
   # set Git configuration files
-  cp "${repo_path}/.gitconfig" "${HOME}/.gitconfig"
-  sudo cp "${repo_path}/.gitconfig" '/root/.gitconfig'
+  cp "$(__get_file .gitconfig)" "${HOME}/.gitconfig"
+  sudo cp "$(__get_file .gitconfig)" '/root/.gitconfig'
 
   # set applications configuration files
-  for app in "${repo_path}/.config/"*; do
+  for app in "$(__get_file .config/)"*; do
     if [[ -L "${HOME}/.config/$(basename "${app}")" ]]; then
       rm --recursive --force "${HOME}/.config/$(basename "${app}")"
     fi
@@ -84,7 +102,7 @@ __install() {
     fi
   done
 
-  for entry in "${repo_path}/desktop_entries/"*; do
+  for entry in "$(__get_file desktop_entries/)"*; do
     if [[ -f "${HOME}/Desktop/$(basename "${entry}")" ]]; then
       continue
     fi
@@ -92,7 +110,10 @@ __install() {
     cp "${entry}" "${HOME}/Desktop/$(basename "${entry}")"
   done
 
-  sudo ln --force --symbolic "${repo_path}/usr/share/xournalpp/ui/toolbar.ini" '/usr/share/xournalpp/ui/toolbar.ini'
+  sudo ln --force --symbolic "$(__get_file usr/share/xournalpp/ui/toolbar.ini)" '/usr/share/xournalpp/ui/toolbar.ini'
 }
+
+### Script ###
+script_path="$0"
 
 __install

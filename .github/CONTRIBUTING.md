@@ -2,7 +2,9 @@
 For contribute at this project, open an Issue or a Pull request.
 
 # Code Style Rules
-See the [Google Code Style Rules](https://google.github.io/styleguide/shellguide.html)
+See the [Google Code Style Rules](https://google.github.io/styleguide/) about the following languages:
+* [Shell](https://google.github.io/styleguide/shellguide.html)
+(I suggest you to use `shfmt` with the options `-i 2 -ci -sr -w -bn`).
 
 # Commit Message Format
 *This specification is inspired by and supersedes the [AngularJS commit message format][https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-format].*

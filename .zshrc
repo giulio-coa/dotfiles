@@ -3657,14 +3657,14 @@ if (( GRMLSMALL_SPECIFIC > 0 )) && isgrmlsmall ; then
     # Clean up
 
     unset "abk[V]"
-    unalias    'V'      &> /dev/null
-    unfunction vman     &> /dev/null
-    unfunction viless   &> /dev/null
-    unfunction 2html    &> /dev/null
+    unalias    'V'      > /dev/null 2> /dev/null
+    unfunction vman     > /dev/null 2> /dev/null
+    unfunction viless   > /dev/null 2> /dev/null
+    unfunction 2html    > /dev/null 2> /dev/null
 
     # manpages are not in grmlsmall
-    unfunction manzsh   &> /dev/null
-    unfunction man2     &> /dev/null
+    unfunction manzsh   > /dev/null 2> /dev/null
+    unfunction man2     > /dev/null 2> /dev/null
 
     # Workarounds
 
@@ -3706,20 +3706,21 @@ zrclocal
 # include personal tools
 if repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles$' 2> /dev/null)"; then
   if command -v apt > /dev/null 2> /dev/null; then
-    . "${repo_path}/apt.sh"
+    source "${repo_path}/apt.sh"
   elif command -v dnf > /dev/null 2> /dev/null; then
-    . "${repo_path}/dnf.sh"
+    source "${repo_path}/dnf.sh"
   elif command -v pacman > /dev/null 2> /dev/null; then
-    . "${repo_path}/pacman.sh"
+    source "${repo_path}/pacman.sh"
 
     if command -v yay > /dev/null 2> /dev/null; then
-      . "${repo_path}/aur.sh"
+      source "${repo_path}/aur.sh"
     fi
   fi
 
-  . "${repo_path}/alias.sh"
-  . "${repo_path}/colors.sh"
-  . "${repo_path}/git.sh"
+  source "${repo_path}/alias.sh"
+  source "${repo_path}/colors.sh"
+  source "${repo_path}/docker.sh"
+  source "${repo_path}/git.sh"
 fi
 
 unset repo_path

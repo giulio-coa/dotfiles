@@ -1,10 +1,3 @@
-### DotfilesSh ###
-local-patch
-patched-src
-
-### DotSettings ###
-*.DotSettings
-
 ### Kate ###
 # Swap Files #
 .*.kate-swp
@@ -28,6 +21,7 @@ patched-src
 ### Vim ###
 # Swap
 [._]*.s[a-v][a-z]
+!*.svg  # comment out if you don't need vector files
 [._]*.sw[a-p]
 [._]s[a-rt-v][a-z]
 [._]ss[a-gi-z]
@@ -39,12 +33,14 @@ Sessionx.vim
 
 # Temporary
 .netrwhist
-
 # Auto-generated tag files
 tags
-
 # Persistent undo
 [._]*.un~
 
-### Personal ###
+### DotfilesSh ###
+local-patch
+patched-src
+
+### dotenv ###
 .env
