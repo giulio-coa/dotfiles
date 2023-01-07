@@ -1,0 +1,22 @@
+[Unit]
+# Check if the enviroment file exists
+AssertPathExists=.../Pi-hole/docker/.env
+AssertFileNotEmpty=.../Pi-hole/docker/.env
+
+# Set the dependencies
+Requires=docker.service multi-user.target
+After=docker.service network-online.target dhcpd.service
+
+Description=System Unit that (re)start Pi-hole
+
+[Service]
+Type=simple
+User=my_user
+Group=my_user
+
+ExecStart=.../Pi-hole/pihole.sh --build
+
+Restart=on-failure
+
+[Install]
+Alias=pihole.service

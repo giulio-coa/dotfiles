@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  pihole:
+    build:
+      context: .../Pi-hole/docker/
+      dockerfile: Dockerfile
+    container_name: pi-hole
+    env_file: .../Pi-hole/docker/.env
+    ports:
+      - target: 53
+        published: 53
+        protocol: tcp
+      - target: 53
+        published: 53
+        protocol: udp
+      - target: 80
+        published: 80
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ${HOME}/etc-pihole
+        target: /etc/pihole
+      - type: bind
+        source: ${HOME}/etc-dnsmasq.d
+        target: /etc/dnsmasq.d
