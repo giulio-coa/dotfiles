@@ -1,13 +1,13 @@
 #!/bin/bash
 
-#############################################################################
-#	Filename:	    	.../check_IP/check_IP.sh								                	#
-#	Purpose:	    	Script that checks the public IP of the router	    			#
-#	Authors:    		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
-#	License:	    	This file is licensed under the LGPLv3.					        	#
-#	Pre-requisites:														                            		#
-#					        * sudo		                         												#
-#############################################################################
+##############################################################################
+#  Filename:       .../check_IP/check_IP.sh                                  #
+#  Purpose:        Script that checks the public IP of the router            #
+#  Authors:        Giulio Coa <34110430+giulioc008@users.noreply.github.com> #
+#  License:        This file is licensed under the LGPLv3.                   #
+#  Pre-requisites:                                                           #
+#                  * sudo                                                    #
+##############################################################################
 
 ### Functions ###
 __err() {

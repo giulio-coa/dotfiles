@@ -1,20 +1,20 @@
 [core]
-	editor = /usr/bin/vim
+  editor = /usr/bin/vim
 [help]
-	autocorrect = 1
+  autocorrect = 1
 [color]
-	ui = true
+  ui = true
 [user]
-	name = Mario Rossi
-	email = mail_to@provider.com
-	signingkey = IVMNZ7MTBVUWP1JT
+  name = Mario Rossi
+  email = mail_to@provider.com
+  signingkey = IVMNZ7MTBVUWP1JT
 [credential]
-	helper = store
+  helper = store
 [pull]
-	rebase = false
+  rebase = false
 [commit]
-	gpgSign = true
+  gpgSign = true
 [gui]
-	pruneduringfetch = true
+  pruneduringfetch = true
 [push]
-	recurseSubmodules = check
+  recurseSubmodules = check

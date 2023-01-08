@@ -1,7 +1,7 @@
 " Vim syntax file
-" Language:	    HTML5 New Stuff
-" Maintainer:	othree <othree@gmail.com>
-" URL:		    http://github.com/othree/html5-syntax.vim
+" Language:      HTML5 New Stuff
+" Maintainer:  othree <othree@gmail.com>
+" URL:        http://github.com/othree/html5-syntax.vim
 " Last Change:  2011-05-27
 " License:      MIT
 " Changes:      

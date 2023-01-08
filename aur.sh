@@ -1,14 +1,14 @@
 #!/bin/bash
 
 ###############################################################################################
-#	Filename:		    .../dotfiles/aur.sh													                              	#
-#	Purpose:	    	File that manage the package manager AUR				                  					#
-#	Authors:	    	Giulio Coa <34110430+giulioc008@users.noreply.github.com>, Christian Mondo	#
-#	License:	    	This file is licensed under the LGPLv3.		                  								#
-#	Pre-requisites:																		                                      		#
-#					        * pacman														                                  			#
-#					        * sudo																                                  		#
-#					        * yay (https://github.com/Jguer/yay)	                    									#
+#  Filename:       .../dotfiles/aur.sh                                                        #
+#  Purpose:        File that manage the package manager AUR                                   #
+#  Authors:        Giulio Coa <34110430+giulioc008@users.noreply.github.com>, Christian Mondo #
+#  License:        This file is licensed under the LGPLv3.                                    #
+#  Pre-requisites:                                                                            #
+#                  * pacman                                                                   #
+#                  * sudo                                                                     #
+#                  * yay (https://github.com/Jguer/yay)                                       #
 ###############################################################################################
 
 if ! command -v sudo > /dev/null 2> /dev/null; then

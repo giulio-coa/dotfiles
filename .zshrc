@@ -1,10 +1,10 @@
-###################################################################################################
-#	Filename:		~/.zshrc																		                                      	#
-#	Purpose:		Config file for zsh (z shell)											                            			#
-#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>						               	#
-#	License:		This file is licensed under the LGPLv3.											                      	#
-#	Comments:		Based on the zsh configuration file of grml (https://github.com/grml/grml-etc-core)	#
-###################################################################################################
+####################################################################################################
+#  Filename:   ~/.zshrc                                                                            #
+#  Purpose:    Config file for zsh (z shell)                                                       #
+#  Authors:    Giulio Coa <34110430+giulioc008@users.noreply.github.com>                           #
+#  License:    This file is licensed under the LGPLv3.                                             #
+#  Comments:   Based on the zsh configuration file of grml (https://github.com/grml/grml-etc-core) #
+####################################################################################################
 
 # zsh profiling
 # just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
@@ -82,7 +82,7 @@ if isgrml ; then
     }
 else
     function isgrmlsmall {
-		return 1
+    return 1
     }
 fi
 

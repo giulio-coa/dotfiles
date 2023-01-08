@@ -1,11 +1,11 @@
 #!/bin/sh
 
-#########################################################################
-#	Filename:		.../dotfiles/alias.sh			                  							#
-#	Purpose:		File that defines the aliases for some commands		      	#
-#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
-#	License:		This file is licensed under the LGPLv3.					          #
-#########################################################################
+##########################################################################
+#  Filename:   .../dotfiles/alias.sh                                     #
+#  Purpose:    File that defines the aliases for some commands           #
+#  Authors:    Giulio Coa <34110430+giulioc008@users.noreply.github.com> #
+#  License:    This file is licensed under the LGPLv3.                   #
+##########################################################################
 
 alias cd..='cd ..'
 alias hystory='history'

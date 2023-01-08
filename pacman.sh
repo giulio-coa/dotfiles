@@ -1,14 +1,14 @@
 #!/bin/bash
 
-###############################################################################################
-#	Filename:		    .../dotfiles/pacman.sh				                          										#
-#	Purpose:	    	File that manage the package manager pacman						                			#
-#	Authors:	    	Giulio Coa <34110430+giulioc008@users.noreply.github.com>, Christian Mondo	#
-#	License:		    This file is licensed under the LGPLv3.				                   						#
-#	Pre-requisites:																		                                      		#
-#		        			* pacman			      												                            		#
-#				        	* sudo				                              		    												#
-###############################################################################################
+################################################################################################
+#  Filename:        .../dotfiles/pacman.sh                                                     #
+#  Purpose:        File that manage the package manager pacman                                 #
+#  Authors:        Giulio Coa <34110430+giulioc008@users.noreply.github.com>, Christian Mondo  #
+#  License:        This file is licensed under the LGPLv3.                                     #
+#  Pre-requisites:                                                                             #
+#                  * pacman                                                                    #
+#                  * sudo                                                                      #
+################################################################################################
 
 if ! command -v sudo > /dev/null 2> /dev/null; then
   echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red:-}sudo isn't installed${reset:-}" > /dev/stderr

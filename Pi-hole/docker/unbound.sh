@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##############################################################################
-#  Filename:        .../unbound.sh                                           #
+#  Filename:       .../unbound.sh                                            #
 #  Purpose:        Script that installs and configures Unbound.              #
 #  Authors:        Giulio Coa <34110430+giulioc008@users.noreply.github.com> #
 #  License:        This file is licensed under the LGPLv3.                   #

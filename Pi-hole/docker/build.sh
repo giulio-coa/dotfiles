@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##############################################################################
-#  Filename:        .../Pi-hole/docker/build.sh                              #
+#  Filename:       .../Pi-hole/docker/build.sh                               #
 #  Purpose:        Script that build a docker-compose project                #
 #  Authors:        Giulio Coa <34110430+giulioc008@users.noreply.github.com> #
 #  License:        This file is licensed under the LGPLv3.                   #

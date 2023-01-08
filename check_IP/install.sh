@@ -1,13 +1,13 @@
 #!/bin/bash
 
-#####################################################################################################
-# Filename:	    	.../check_IP/install.sh			  										                          			#
-#	Purpose:	    	File that create the links for the opportune System Unit into the opportune paths	#
-#	Authors:	    	Giulio Coa <34110430+giulioc008@users.noreply.github.com> 		          					#
-#	License:	    	This file is licensed under the LGPLv3.											                    	#
-#	Pre-requisites:								    													                                    	#
-#				        	* sudo			                                    																	#
-#####################################################################################################
+######################################################################################################
+#  Filename:       .../check_IP/install.sh                                                           #
+#  Purpose:        File that create the links for the opportune System Unit into the opportune paths #
+#  Authors:        Giulio Coa <34110430+giulioc008@users.noreply.github.com>                         #
+#  License:        This file is licensed under the LGPLv3.                                           #
+#  Pre-requisites:                                                                                   #
+#                  * sudo                                                                            #
+######################################################################################################
 
 ### Functions ###
 __err() {

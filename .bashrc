@@ -1,9 +1,9 @@
-#########################################################################
-#	Filename:		~/.bashrc											                        		#
-#	Purpose:		Config file for bash (bourne again shell)			          	#
-#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
-#	License:		This file is licensed under the LGPLv3.				        		#
-#########################################################################
+##########################################################################
+#  Filename:    ~/.bashrc                                                #
+#  Purpose:    Config file for bash (bourne again shell)                 #
+#  Authors:    Giulio Coa <34110430+giulioc008@users.noreply.github.com> #
+#  License:    This file is licensed under the LGPLv3.                   #
+##########################################################################
 
 # Source global definitions
 if [[ -f /etc/bashrc ]]; then

@@ -1,7 +1,7 @@
 " Vim syntax file
-" Language:	    WAI-ARIA
-" Maintainer:  	othree <othree@gmail.com>
-" URL:		      http://github.com/othree/html5-syntax.vim
+" Language:      WAI-ARIA
+" Maintainer:    othree <othree@gmail.com>
+" URL:          http://github.com/othree/html5-syntax.vim
 " Last Change:  2014-05-02
 " License:      MIT
 " Changes:      Add match rules 

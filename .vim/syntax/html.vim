@@ -1,7 +1,7 @@
 " Vim syntax file
-" Language:	HTML (version 5)
-" Maintainer:	Rodrigo Machado <rcmachado@gmail.com>
-" URL:		http://rm.blog.br/vim/syntax/html.vim
+" Language:  HTML (version 5)
+" Maintainer:  Rodrigo Machado <rcmachado@gmail.com>
+" URL:    http://rm.blog.br/vim/syntax/html.vim
 " Last Change:  2009 Aug 19
 " License:      Public domain
 "               (but let me know if you like :) )

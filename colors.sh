@@ -1,11 +1,11 @@
 #!/bin/sh
 
-#########################################################################
-#	Filename:		.../dotfiles/colors.sh								                		#
-#	Purpose:		File that defines the colors on the terminal			      	#
-#	Authors:		Giulio Coa <34110430+giulioc008@users.noreply.github.com>	#
-#	License:		This file is licensed under the LGPLv3.					        	#
-#########################################################################
+##########################################################################
+#  Filename:   .../dotfiles/colors.sh                                    #
+#  Purpose:    File that defines the colors on the terminal              #
+#  Authors:    Giulio Coa <34110430+giulioc008@users.noreply.github.com> #
+#  License:    This file is licensed under the LGPLv3.                   #
+##########################################################################
 
 export black='\e[0;30m'
 export red='\e[0;31m'

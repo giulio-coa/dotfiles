@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##########################################################################
-# Filename:    .../Pi-hole/pihole.sh                                     #
+#  Filename:   .../Pi-hole/pihole.sh                                     #
 #  Purpose:    File that start Pi-hole at boot time                      #
 #  Authors:    Giulio Coa <34110430+giulioc008@users.noreply.github.com> #
 #  License:    This file is licensed under the LGPLv3.                   #
