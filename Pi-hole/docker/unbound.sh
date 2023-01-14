@@ -18,7 +18,7 @@ __err() {
   reset='\e[0m'
   bold_red='\e[1;31m'
 
-  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red}$@${reset}" > /dev/stderr
+  echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${bold_red}$@${reset}" > /dev/stderr
 }
 
 ### Script ###
