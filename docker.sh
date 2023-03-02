@@ -22,3 +22,11 @@ fi
 docker-clean-all() {
   sudo docker system prune --all --force --volumes
 }
+
+# Instantiate a Jupyter Docker Container
+docker-jupyter() {
+  sudo docker run --rm --interactive \
+    --tty --name jupyter_01 \
+    --publish 8080:8888 \
+    jupyter/scipy-notebook:python-3.10
+}
