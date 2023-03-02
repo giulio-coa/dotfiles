@@ -15,6 +15,18 @@ if command -v diff > /dev/null 2> /dev/null; then
   alias diff='diff --color=auto'
 fi
 
+if command -v docker > /dev/null 2> /dev/null; then
+  alias docker='sudo docker'
+
+  if ! command -v docker-compose > /dev/null 2> /dev/null; then
+    alias docker-compose='sudo docker compose'
+  fi
+fi
+
+if command -v docker-compose > /dev/null 2> /dev/null; then
+  alias docker-compose='sudo docker-compose'
+fi
+
 if command -v grep > /dev/null 2> /dev/null; then
   alias grep='grep --extended-regexp --no-messages --color=auto'
 fi
