@@ -20,13 +20,33 @@ fi
 
 # Remove all containers, images and volumes
 docker-clean-all() {
+  local volume
+
   sudo docker system prune --all --force --volumes
+
+  for volume in $(sudo docker volume ls \
+    | sed --regexp-extended --expression='s/\s+/,/g' \
+    | cut --delimiter ',' --fields 2); do
+	if [[ "${volume}" == 'VOLUME' ]]; then
+	  continue
+	fi
+
+    sudo docker volume rm -f "${volume}" > /dev/null
+  done
+}
+
+# List all containers, images, networks and volumes
+docker-list-all() {
+  sudo docker container ls --all
+  sudo docker image ls --all
+  sudo docker network ls
+  sudo docker volume ls
 }
 
 # Instantiate a Jupyter Docker Container
 docker-jupyter() {
   sudo docker run --rm --interactive \
     --tty --name jupyter_01 \
-    --publish 8080:8888 \
+    --publish 8888:8888 \
     jupyter/scipy-notebook:python-3.10
 }
