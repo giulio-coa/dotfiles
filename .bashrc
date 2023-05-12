@@ -48,6 +48,7 @@ if repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles$' 2> /dev/null)"; the
   source "${repo_path}/colors.sh"
   source "${repo_path}/docker.sh"
   source "${repo_path}/git.sh"
+  source "${repo_path}/ssh.sh"
 fi
 
 unset repo_path
