@@ -28,7 +28,9 @@ if [[ ! -e ~/.inputrc ]]; then
   echo '$include /etc/inputrc' > ~/.inputrc
 fi
 
-echo 'set completion-ignore-case On' >> ~/.inputrc
+if ! grep --quiet --extended-regexp --no-messages --regexp='^set completion-ignore-case On$' ~/.inputrc; then
+  echo 'set completion-ignore-case On' >> ~/.inputrc
+fi
 
 # include personal tools
 if repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles$' 2> /dev/null)"; then
