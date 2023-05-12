@@ -17,6 +17,6 @@ fi
 # Use the Diffie-Hellman algorithm to exchange
 # the key when the connection is established
 ssh-df() {
-  ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-dss  "$@"
+  ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-dss "$@"
 }
 
