@@ -3704,7 +3704,7 @@ zrclocal
 ## Code that must be execute when the shell is opened
 
 # include personal tools
-if repo_path="$(find "${HOME}" -type d -regex '.*/dotfiles$' 2> /dev/null)"; then
+if repo_path="$(find / -type d -regex '.*/dotfiles$' 2> /dev/null)"; then
   if command -v apt > /dev/null 2> /dev/null; then
     source "${repo_path}/apt.sh"
   elif command -v dnf > /dev/null 2> /dev/null; then
