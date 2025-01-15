@@ -16,3 +16,5 @@ set noexpandtab
 set autoindent
 
 set showmatch
+
+set mouse=r
